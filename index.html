@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subhasankar - ServiceNow Developer Portfolio</title>
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230a192f'/%3E%3Ctext x='50' y='50' font-size='50' font-family='Inter, sans-serif' fill='%2364ffda' text-anchor='middle' dy='.3em' font-weight='600'%3ESB%3C/text%3E%3C/svg%3E">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Updated Tailwind CSS configuration with a more vibrant palette
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-navy': '#0a192f',      // A deep navy for the main background
+                        'light-navy': '#112240',     // A slightly lighter navy for cards/elements
+                        'lightest-slate': '#ccd6f6',  // For headings and bright text
+                        'slate': '#8892b0',          // For body text and less prominent info
+                        'primary-accent': '#64ffda',    // A vibrant teal/mint for accents
+                        'secondary-accent': '#7f5af0',  // A vibrant purple for secondary accents
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for social icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Base styles using the new color palette */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a192f; /* dark-navy */
+            color: #8892b0; /* slate */
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Page Loader Styles */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0a192f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.75s, visibility 0.75s;
+        }
+        #loader.loaded {
+            opacity: 0;
+            visibility: hidden;
+        }
+        #loader .logo {
+            width: 80px;
+            height: 80px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+
+        /* Canvas for particle background */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Place it behind all content */
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+
+        /* Header styling with frosted glass effect */
+        #main-header {
+            background-color: rgba(10, 25, 47, 0.85); /* dark-navy with alpha */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: background-color 0.3s;
+        }
+
+        /* Section heading style */
+        .section-heading {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2.5rem;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #ccd6f6; /* lightest-slate */
+            transition: color 0.3s;
+        }
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60%;
+            height: 3px;
+            background-color: #64ffda; /* primary-accent */
+            border-radius: 9999px;
+            transition: background-color 0.3s;
+        }
+
+        /* Hero section text styling */
+        .hero-intro {
+            color: #64ffda; /* primary-accent */
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            transition: color 0.3s;
+        }
+        .hero-name {
+            font-size: clamp(40px, 8vw, 80px); /* Responsive font size */
+            font-weight: 800;
+            color: #ccd6f6; /* lightest-slate */
+            line-height: 1.1;
+            transition: color 0.3s;
+        }
+        .hero-title {
+            font-size: clamp(30px, 6vw, 60px); /* Responsive font size */
+            font-weight: 800;
+            color: #8892b0; /* slate */
+            line-height: 1.1;
+            min-height: 140px; /* Reserve space to prevent layout shift */
+            transition: color 0.3s;
+        }
+        
+        /* Typewriter cursor effect */
+        .typewriter-cursor {
+            display: inline-block;
+            width: 4px;
+            height: 1em;
+            background-color: #64ffda; /* primary-accent */
+            animation: blink 0.7s infinite;
+            vertical-align: bottom;
+            margin-left: 8px;
+            transition: background-color 0.3s;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Modern button style with gradient */
+        .btn-primary {
+            background-image: linear-gradient(to right, #7f5af0 0%, #64ffda 51%, #7f5af0 100%);
+            background-size: 200% auto;
+            color: #0a192f;
+            transition: 0.5s;
+        }
+        .btn-primary:hover {
+            background-position: right center; /* change the direction of the change here */
+            color: #fff;
+            text-decoration: none;
+        }
+        .btn-secondary {
+            border: 2px solid #64ffda;
+            color: #64ffda;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+        }
+
+        /* Card styling */
+        .card {
+            background-color: #112240; /* light-navy */
+            transition: all 0.3s ease-in-out;
+            border: 1px solid transparent;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: #64ffda; /* primary-accent */
+            box-shadow: 0 10px 30px -15px rgba(2,12,27,0.7);
+        }
+
+        /* Skill list styling */
+        .skill-item, .responsibility-item {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 10px;
+        }
+        .skill-item::before, .responsibility-item::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: #64ffda; /* primary-accent */
+            transition: color 0.3s;
+        }
+
+        /* Experience section styling */
+        .experience-item {
+            background-color: #112240;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .experience-item:hover {
+            border-left-color: #64ffda;
+            transform: translateX(5px);
+        }
+        .job-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #ccd6f6;
+            transition: color 0.3s;
+        }
+        .company-name {
+            color: #64ffda;
+            transition: color 0.3s;
+        }
+        .job-meta {
+            font-size: 0.875rem;
+            color: #8892b0;
+            transition: color 0.3s;
+        }
+
+        /* Testimonials Section */
+        #testimonial-text {
+            font-size: 1.25rem;
+            font-style: italic;
+            min-height: 100px; /* Prevent layout shift */
+        }
+        #testimonial-author {
+            font-weight: 600;
+            color: #ccd6f6;
+            transition: color 0.3s;
+        }
+
+        /* Insights Scroller */
+        .insights-container {
+            height: 120px; /* Adjust height to show 2 items */
+            overflow: hidden;
+            position: relative;
+        }
+        .insights-scroller {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            animation: scroll-up 20s linear infinite;
+        }
+        .insights-container:hover .insights-scroller {
+            animation-play-state: paused;
+        }
+        @keyframes scroll-up {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); } /* Scroll up by half the height (since items are duplicated) */
+        }
+
+
+        /* Social links styling */
+        .social-links a {
+            color: #ccd6f6;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .social-links a:hover {
+            color: #64ffda; /* primary-accent */
+            transform: translateY(-3px);
+        }
+
+        /* Professional photo styling */
+        .profile-photo-container {
+            position: relative;
+            max-width: 350px;
+        }
+        .profile-photo-container::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #64ffda;
+            border-radius: 8px;
+            z-index: -1;
+            transition: all 0.3s ease;
+        }
+        .profile-photo-container:hover::after {
+            top: 15px;
+            left: 15px;
+        }
+        .profile-photo {
+            border-radius: 8px;
+            filter: grayscale(80%) contrast(1.1);
+            transition: filter 0.3s ease;
+        }
+        .profile-photo:hover {
+            filter: grayscale(0%) contrast(1);
+        }
+
+        /* Mobile Menu Styles */
+        #mobile-menu-button span {
+            position: absolute;
+            width: 24px;
+            height: 2px;
+            background-color: #ccd6f6;
+            border-radius: 2px;
+            transition: all 0.3s ease-in-out;
+        }
+        .hamburger-top { top: 6px; }
+        .hamburger-middle { top: 14px; }
+        .hamburger-bottom { top: 22px; }
+
+        #mobile-menu-button.is-active .hamburger-top {
+            transform: rotate(45deg) translateY(6px) translateX(6px);
+        }
+        #mobile-menu-button.is-active .hamburger-middle {
+            opacity: 0;
+        }
+        #mobile-menu-button.is-active .hamburger-bottom {
+            transform: rotate(-45deg) translateY(-6px) translateX(6px);
+        }
+
+        #mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            visibility: hidden;
+        }
+        #mobile-menu.is-open {
+            transform: translateX(0);
+            visibility: visible;
+        }
+
+        #mobile-menu.is-open a, #mobile-menu.is-open button {
+            opacity: 0;
+            animation: fadeIn 0.3s ease forwards;
+        }
+        #mobile-menu.is-open a:nth-child(1) { animation-delay: 0.1s; }
+        #mobile-menu.is-open a:nth-child(2) { animation-delay: 0.2s; }
+        #mobile-menu.is-open a:nth-child(3) { animation-delay: 0.3s; }
+        #mobile-menu.is-open a:nth-child(4) { animation-delay: 0.4s; }
+        #mobile-menu.is-open a:nth-child(5) { animation-delay: 0.5s; }
+        #mobile-menu.is-open button:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+
+        /* Light Mode Styles */
+        body.light-mode {
+            background-color: #f0f2f5; /* Light gray background */
+            color: #4a5568; /* Darker text */
+        }
+        body.light-mode .section-heading,
+        body.light-mode .hero-name,
+        body.light-mode .job-title,
+        body.light-mode .text-lightest-slate,
+        body.light-mode #testimonial-author,
+        body.light-mode .social-links a {
+            color: #1a202c; /* Very dark text for headings */
+        }
+        body.light-mode .hero-title,
+        body.light-mode .text-slate,
+        body.light-mode .job-meta {
+            color: #4a5568;
+        }
+        body.light-mode #main-header,
+        body.light-mode .card,
+        body.light-mode .experience-item,
+        body.light-mode .bg-light-navy,
+        body.light-mode #mobile-menu {
+            background-color: #ffffff; /* White background for elements */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+        }
+        body.light-mode #main-header {
+            background-color: rgba(255, 255, 255, 0.85);
+        }
+        body.light-mode .btn-secondary {
+            color: #2c5282; /* Dark blue */
+            border-color: #2c5282;
+        }
+        body.light-mode .btn-secondary:hover {
+             background-color: rgba(44, 82, 130, 0.1);
+        }
+        body.light-mode .company-name,
+        body.light-mode .hero-intro,
+        body.light-mode .skill-item::before,
+        body.light-mode .responsibility-item::before,
+        body.light-mode .text-primary-accent,
+        body.light-mode #typewriter,
+        body.light-mode .section-heading::after {
+            color: #2c5282; /* Dark blue for accents */
+            background-color: transparent; /* override for after element */
+        }
+        body.light-mode .typewriter-cursor {
+            background-color: #2c5282;
+        }
+        body.light-mode #particle-canvas {
+            opacity: 0.1; /* Make particles much more subtle in light mode */
+        }
+        body.light-mode .experience-item:hover, body.light-mode .profile-photo-container::after {
+            border-color: #2c5282;
+        }
+        body.light-mode .social-links a:hover {
+            color: #2c5282;
+        }
+        body.light-mode #mobile-menu-button span {
+            background-color: #1a202c;
+        }
+
+    </style>
+</head>
+<body class="antialiased leading-relaxed">
+
+    <!-- Page Loader -->
+    <div id="loader">
+        <div class="logo">
+            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+                <rect width='100' height='100' rx='20' fill='transparent'/>
+                <text x='50' y='50' font-size='50' font-family='Inter, sans-serif' fill='%2364ffda' text-anchor='middle' dy='.3em' font-weight='600'>SB</text>
+            </svg>
+        </div>
+    </div>
+
+
+    <!-- The particle background canvas -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Header Section -->
+    <header id="main-header" class="py-4 sticky top-0 z-50 shadow-lg transition-all duration-300 ease-in-out">
+        <nav class="container flex justify-between items-center">
+            <a href="#" class="text-2xl font-extrabold text-primary-accent rounded-lg p-2 flex items-center">
+                SB
+            </a>
+            <ul class="hidden md:flex items-center space-x-6">
+                <li><a href="#about" class="text-slate hover:text-primary-accent transition duration-300 ease-in-out font-medium px-3 py-2">About</a></li>
+                <li><a href="#skills" class="text-slate hover:text-primary-accent transition duration-300 ease-in-out font-medium px-3 py-2">Skills</a></li>
+                <li><a href="#experience" class="text-slate hover:text-primary-accent transition duration-300 ease-in-out font-medium px-3 py-2">Experience</a></li>
+                <li><a href="#contact" class="text-slate hover:text-primary-accent transition duration-300 ease-in-out font-medium px-3 py-2">Contact</a></li>
+                <li><a href="https://drive.google.com/file/d/1ZvQ6-oC8mo5zS7ujP4Exnf3VjhgdAESM/view?usp=sharing" class="btn-secondary px-4 py-2 rounded-md text-sm">Resume</a></li>
+                <!-- Light/Dark Mode Toggle -->
+                <li>
+                    <button id="theme-toggle" class="text-slate hover:text-primary-accent text-xl">
+                        <i class="fas fa-sun"></i>
+                    </button>
+                </li>
+            </ul>
+            <!-- Mobile Menu Button -->
+             <div class="md:hidden">
+                <button id="mobile-menu-button" class="z-50 relative w-8 h-8">
+                    <span class="hamburger-top"></span>
+                    <span class="hamburger-middle"></span>
+                    <span class="hamburger-bottom"></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-y-0 right-0 bg-light-navy w-3/4 max-w-sm z-40 flex flex-col items-center justify-center space-y-8 text-2xl">
+        <a href="#about" class="mobile-menu-link text-slate hover:text-primary-accent">About</a>
+        <a href="#skills" class="mobile-menu-link text-slate hover:text-primary-accent">Skills</a>
+        <a href="#experience" class="mobile-menu-link text-slate hover:text-primary-accent">Experience</a>
+        <a href="#contact" class="mobile-menu-link text-slate hover:text-primary-accent">Contact</a>
+        <a href="https://drive.google.com/file/d/1ZvQ6-oC8mo5zS7ujP4Exnf3VjhgdAESM/view?usp=sharing" class="btn-secondary px-6 py-3">Resume</a>
+        <button id="mobile-theme-toggle" class="text-slate hover:text-primary-accent text-3xl">
+            <i class="fas fa-sun"></i>
+        </button>
+    </div>
+
+    <!-- Main Content Wrapper -->
+    <main class="container">
+
+        <!-- Hero Section -->
+        <section id="home" class="py-20 lg:py-28 flex items-center min-h-screen">
+            <div class="z-10">
+                <p class="hero-intro">Hi, my name is</p>
+                <h1 class="hero-name">Subhasankar Badatya.</h1>
+                <h2 class="hero-title">I'm a <span id="typewriter" class="text-primary-accent"></span><span class="typewriter-cursor"></span></h2>
+                <p class="max-w-xl mt-6 text-slate leading-relaxed">
+                    I'm a ServiceNow Developer passionate about building practical and user-focused solutions that simplify business processes. For me, ServiceNow isn't just a platform — it's a toolkit to improve how people work every day.
+                </p>
+                <div class="mt-12 flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="#experience" class="btn-primary text-lg font-semibold px-8 py-4 rounded-lg shadow-lg">
+                        Check out my experience!
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-16 lg:py-24">
+            <h2 class="section-heading">About Me</h2>
+            <div class="flex flex-col lg:flex-row items-start gap-12">
+                <div class="lg:w-3/5 space-y-4 text-slate">
+                    <p>
+                        Hello! I'm Subhasankar, a dedicated and results-driven ServiceNow Developer with 4 years of experience designing, developing, and implementing robust solutions on the ServiceNow platform. My expertise spans ITSM modules and custom application development.
+                    </p>
+                    <p>
+                        I thrive on translating complex business requirements into efficient, scalable solutions. With strong analytical skills and a solid grasp of ServiceNow best practices, I deliver high-quality configurations, scripting, and integrations that streamline operations and drive value.
+                    </p>
+                    <p class="font-semibold text-lightest-slate mt-6">
+                        🔧 Technologies I work with:
+                    </p>
+                    <ul class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                        <li class="skill-item">JavaScript</li>
+                        <li class="skill-item">ServiceNow ITSM</li>
+                        <li class="skill-item">REST & SOAP APIs</li>
+                        <li class="skill-item">LDAP Integration</li>
+                        <li class="skill-item">Workflow & Flow Designer</li>
+                        <li class="skill-item">Custom Applications</li>
+                    </ul>
+                </div>
+                <div class="lg:w-2/5 flex justify-center items-start mt-12 lg:mt-0">
+                    <div class="profile-photo-container">
+                         <img src="Img/Remove background project.png" style="margin-top: -5cm;" alt="Subhasankar Badatya" class="profile-photo w-full h-auto object-cover shadow-xl" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-16 lg:py-24">
+            <h2 class="section-heading">My Skills</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Skill Card 1: ServiceNow Platform -->
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-lightest-slate">ServiceNow Platform</h3>
+                    <ul class="space-y-2 text-slate">
+                        <li class="skill-item">ITSM</li>
+                        <li class="skill-item">Custom App Development</li>
+                        <li class="skill-item">Service Catalog</li>
+                        <li class="skill-item">Workflow & Flow Designer</li>
+                        <li class="skill-item">Update-set</li>
+                        <li class="skill-item">IntegrationHub</li>
+                    </ul>
+                </div>
+                <!-- Skill Card 2: Scripting & Development -->
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-lightest-slate">Scripting & Development</h3>
+                    <ul class="space-y-2 text-slate">
+                        <li class="skill-item">Client & Server Scripts</li>
+                        <li class="skill-item">Business Rules</li>
+                        <li class="skill-item">REST & SOAP APIs</li>
+                        <li class="skill-item">Service Portal (AngularJS)</li>
+                        <li class="skill-item">GlideRecord & GlideAjax</li>
+                        <li class="skill-item">Transform Maps</li>
+                    </ul>
+                </div>
+                <!-- Skill Card 3: Other Relevant Skills -->
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4 text-lightest-slate">Professional Skills</h3>
+                    <ul class="space-y-2 text-slate">
+                        <li class="skill-item">Agile Methodologies</li>
+                        <li class="skill-item">Problem Solving</li>
+                        <li class="skill-item">Debugging & Troubleshooting</li>
+                        <li class="skill-item">Update Set Management</li>
+                        <li class="skill-item">Leadership</li>
+                        <li class="skill-item">Communication</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Work Experience Section -->
+        <section id="experience" class="py-16 lg:py-24">
+            <h2 class="section-heading">Work Experience</h2>
+            <div class="space-y-8">
+                <!-- Experience Item 1: NTT DATA -->
+                <div class="experience-item">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h3 class="job-title">Software Developer @ <span class="company-name">NTT DATA</span></h3>
+                        </div>
+                        <div class="text-right">
+                            <p class="job-meta">July 2023 - Present</p>
+                            <p class="job-meta">Hyderabad</p>
+                        </div>
+                    </div>
+                    <ul class="text-slate text-sm space-y-2">
+                        <li class="responsibility-item">Led the development of Custom Applications to support unique business processes beyond ITSM.</li>
+                        <li class="responsibility-item">Enhanced Service Catalog functionality by implementing advanced Client Scripts and UI Policies.</li>
+                        <li class="responsibility-item">Built server-side logic through Business Rules, Script Includes, Fix Scripts, Background Scripts, and Scheduled Jobs.</li>
+                        <li class="responsibility-item">Knowledgeable in REST API & SOAP Integration.</li>
+                        <li class="responsibility-item">Managed Data Source, Import Sets, Transform Maps, and Transform Scripts.</li>
+                        <li class="responsibility-item">Actively contributed in sprint planning and daily stand-ups.</li>
+                    </ul>
+                </div>
+                <!-- Experience Item 2: Wipro -->
+                <div class="experience-item">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h3 class="job-title">ServiceNow Developer @ <span class="company-name">WIPRO Technologies (WILP - WASE)</span></h3>
+                        </div>
+                        <div class="text-right">
+                            <p class="job-meta">Feb 2022 - July 2023</p>
+                            <p class="job-meta">Hyderabad</p>
+                        </div>
+                    </div>
+                    <ul class="text-slate text-sm space-y-2">
+                        <li class="responsibility-item">Worked on various ITSM modules (Incident, Problem, Change).</li>
+                        <li class="responsibility-item">Managed Tables & Records, creating Users, Groups & Roles.</li>
+                        <li class="responsibility-item">Experienced in Service Catalog, Variables, Variable Sets, Record Producer, Order Guide and Workflows.</li>
+                        <li class="responsibility-item">Experienced in REST API Integration and LDAP.</li>
+                        <li class="responsibility-item">Knowledgeable in SOAP and LDAP Integration.</li>
+                        <li class="responsibility-item">Handled Client Scripts, UI Policies, UI Action, Update sets, Email & Notifications and Flow Designer.</li>
+                        <li class="responsibility-item">Wrote server-side scripts using Business Rules and Background Scripts.</li>
+                    </ul>
+                </div>
+                <!-- Experience Item 3: Bitwise -->
+                <div class="experience-item">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h3 class="job-title">Intern @ <span class="company-name">Bitwise Global</span></h3>
+                        </div>
+                        <div class="text-right">
+                            <p class="job-meta">May 2021 - Nov 2022</p>
+                            <p class="job-meta">Remote</p>
+                        </div>
+                    </div>
+                    <ul class="text-slate text-sm space-y-2">
+                        <li class="responsibility-item">Developed web-based forms and UI components using JavaScript, HTML/CSS, and Bootstrap.</li>
+                        <li class="responsibility-item">6-month intensive internship focused on frontend development.</li>
+                        <li class="responsibility-item">Gained hands-on experience in modern web development practices.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Latest Insights Section -->
+        <section id="insights" class="py-16 lg:py-24">
+            <h2 class="section-heading">Latest Insights</h2>
+            <div class="bg-light-navy p-6 rounded-lg insights-container">
+                <div class="insights-scroller">
+                    <!-- Items are duplicated for a seamless loop -->
+                    <div class="insight-item mb-4">
+                        <h4 class="font-semibold text-lightest-slate">ServiceNow Scripting Best Practices</h4>
+                        <p class="text-slate text-sm">Coming soon: A deep dive into writing efficient and maintainable code.</p>
+                    </div>
+                    <div class="insight-item mb-4">
+                        <h4 class="font-semibold text-lightest-slate">Optimizing Workflows with Flow Designer</h4>
+                        <p class="text-slate text-sm">Coming soon: Tips and tricks for automating complex processes.</p>
+                    </div>
+                    <div class="insight-item mb-4">
+                        <h4 class="font-semibold text-lightest-slate">Mastering REST API Integrations</h4>
+                        <p class="text-slate text-sm">Coming soon: A guide to connecting ServiceNow with third-party applications.</p>
+                    </div>
+                     <div class="insight-item mb-4">
+                        <h4 class="font-semibold text-lightest-slate">ServiceNow Scripting Best Practices</h4>
+                        <p class="text-slate text-sm">Coming soon: A deep dive into writing efficient and maintainable code.</p>
+                    </div>
+                    <div class="insight-item mb-4">
+                        <h4 class="font-semibold text-lightest-slate">Optimizing Workflows with Flow Designer</h4>
+                        <p class="text-slate text-sm">Coming soon: Tips and tricks for automating complex processes.</p>
+                    </div>
+                    <div class="insight-item mb-4">
+                        <h4 class="font-semibold text-lightest-slate">Mastering REST API Integrations</h4>
+                        <p class="text-slate text-sm">Coming soon: A guide to connecting ServiceNow with third-party applications.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="testimonials" class="py-16 lg:py-24 text-center">
+            <h2 class="section-heading mx-auto">What People Say</h2>
+            <div class="max-w-3xl mx-auto">
+                <p id="testimonial-text" class="text-lightest-slate leading-relaxed"></p>
+                <p id="testimonial-author" class="mt-4 text-slate"></p>
+            </div>
+        </section>
+
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-16 lg:py-24">
+             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <!-- Left Column: Contact Info -->
+                <div>
+                    <h2 class="text-3xl font-bold text-lightest-slate mb-4">Let's Connect</h2>
+                    <p class="text-slate mb-8">
+                        Ready to discuss ServiceNow solutions or explore new opportunities? I'd love to hear from you!
+                    </p>
+                    <div class="space-y-4">
+                        <div class="bg-light-navy p-4 rounded-lg flex items-center space-x-4">
+                            <i class="fa-solid fa-phone text-primary-accent text-xl"></i>
+                            <div>
+                                <h4 class="font-semibold text-lightest-slate">Phone</h4>
+                                <p class="text-slate">+91 7682 983883</p>
+                            </div>
+                        </div>
+                        <div class="bg-light-navy p-4 rounded-lg flex items-center space-x-4">
+                            <i class="fa-solid fa-envelope text-primary-accent text-xl"></i>
+                             <div>
+                                <h4 class="font-semibold text-lightest-slate">Email</h4>
+                                <a href="mailto:bsubhasankar.23@gmail.com" class="text-slate hover:text-primary-accent">bsubhasankar.23@gmail.com</a>
+                            </div>
+                        </div>
+                        <div class="bg-light-navy p-4 rounded-lg flex items-center space-x-4">
+                           <i class="fa-brands fa-linkedin text-primary-accent text-xl"></i>
+                             <div>
+                                <h4 class="font-semibold text-lightest-slate">LinkedIn</h4>
+                                <a href="https://in.linkedin.com/in/subhasankar-badatya" target="_blank" class="text-slate hover:text-primary-accent">Connect with me</a>
+                            </div>
+                        </div>
+                        <div class="bg-light-navy p-4 rounded-lg flex items-center space-x-4">
+                            <i class="fa-solid fa-location-dot text-primary-accent text-xl"></i>
+                             <div>
+                                <h4 class="font-semibold text-lightest-slate">Location</h4>
+                                <p class="text-slate">Hyderabad, Telangana</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Education & Collaborate -->
+                <div class="space-y-8">
+                    <div class="bg-light-navy p-6 rounded-lg">
+                        <h3 class="text-xl font-bold text-lightest-slate mb-4"><i class="fa-solid fa-graduation-cap text-primary-accent mr-2"></i>Education</h3>
+                        <div class="mb-4">
+                            <h4 class="font-semibold text-lightest-slate">Bachelor of Computer Applications (BCA)</h4>
+                            <p class="text-slate text-sm">Roland Institute of Computer and Management Studies, Brahmapur, Odisha</p>
+                            <p class="text-slate text-xs mt-1">2017 - 2020</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lightest-slate">+2 Science</h4>
+                            <p class="text-slate text-sm">Berhampur City College, Berhampur, Odisha</p>
+                            <p class="text-slate text-xs mt-1">2015 - 2017</p>
+                        </div>
+                    </div>
+                     <div class="p-6 rounded-lg bg-gradient-to-r from-secondary-accent/[.15] to-primary-accent/[.15]">
+                        <h3 class="text-xl font-bold text-lightest-slate mb-2">Ready to Collaborate?</h3>
+                        <p class="text-slate">Let's discuss how I can help optimize your ServiceNow environment and drive digital transformation for your organization.</p>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="py-8">
+        <div class="container text-center text-sm text-slate">
+            <div class="social-links flex justify-center space-x-6 mb-4">
+                <a href="https://github.com/bsubhasankar" target="_blank" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="https://in.linkedin.com/in/subhasankar-badatya" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="https://m.facebook.com/profile.php?id=100007200885989" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                <a href="https://instagram.com/subha_sankar_?igshid=MzRlODBiNWFlZA==" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+            <p>&copy; 2025 Subhasankar Badatya. All rights reserved.</p>
+            <p class="font-mono text-xs mt-2">Designed & Built by Subhasankar Badatya</p>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });"
+            class="fixed bottom-5 right-5 bg-primary-accent text-dark-navy p-3 rounded-full shadow-lg hover:bg-secondary-accent transition-opacity duration-300 opacity-0 pointer-events-none z-50">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+
+    <!-- JavaScript for smooth scrolling and dynamic elements -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Page Loader ---
+            const loader = document.getElementById('loader');
+            window.addEventListener('load', () => {
+                loader.classList.add('loaded');
+            });
+
+            // --- Theme Toggle ---
+            const themeToggle = document.getElementById('theme-toggle');
+            const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+            const body = document.body;
+            const moonIcon = '<i class="fas fa-moon"></i>';
+            const sunIcon = '<i class="fas fa-sun"></i>';
+
+            const applyTheme = (theme) => {
+                if (theme === 'light') {
+                    body.classList.add('light-mode');
+                    themeToggle.innerHTML = moonIcon;
+                    mobileThemeToggle.innerHTML = moonIcon;
+                } else {
+                    body.classList.remove('light-mode');
+                    themeToggle.innerHTML = sunIcon;
+                    mobileThemeToggle.innerHTML = sunIcon;
+                }
+            };
+
+            const toggleTheme = () => {
+                const currentTheme = body.classList.contains('light-mode') ? 'light' : 'dark';
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                applyTheme(newTheme);
+                localStorage.setItem('theme', newTheme);
+            };
+            
+            themeToggle.addEventListener('click', toggleTheme);
+            mobileThemeToggle.addEventListener('click', toggleTheme);
+
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (savedTheme) {
+                applyTheme(savedTheme);
+            } else if (prefersDark) {
+                applyTheme('dark');
+            } else {
+                applyTheme('light');
+            }
+            
+            // --- Mobile Menu ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenuButton.classList.toggle('is-active');
+                mobileMenu.classList.toggle('is-open');
+            });
+
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenuButton.classList.remove('is-active');
+                    mobileMenu.classList.remove('is-open');
+                });
+            });
+
+
+            // --- Smooth Scrolling ---
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // --- Typewriter Effect ---
+            const roles = ["ServiceNow Developer.", "ITSM Specialist.", "Custom App Developer.", "Integration Expert."];
+            let roleIndex = 0;
+            let roleCharIndex = 0;
+            const speed = 100;
+            const typewriterElement = document.getElementById("typewriter");
+
+            function typeWriter() {
+                const text = roles[roleIndex];
+                if (roleCharIndex < text.length) {
+                    typewriterElement.textContent += text.charAt(roleCharIndex);
+                    roleCharIndex++;
+                    setTimeout(typeWriter, speed);
+                } else {
+                    setTimeout(eraseText, 2000);
+                }
+            }
+
+            function eraseText() {
+                const text = roles[roleIndex];
+                if (roleCharIndex > 0) {
+                    typewriterElement.textContent = text.substring(0, roleCharIndex - 1);
+                    roleCharIndex--;
+                    setTimeout(eraseText, speed / 2);
+                } else {
+                    roleIndex = (roleIndex + 1) % roles.length;
+                    setTimeout(typeWriter, speed);
+                }
+            }
+            
+            // --- Testimonial Typewriter ---
+            const testimonials = [
+                { quote: "Subhasankar consistently delivers robust ServiceNow solutions and has a great eye for business logic.", author: "— Project Lead, NTT DATA" },
+                { quote: "He was a key player in our ITSM enhancement projects. His ability to troubleshoot complex issues was invaluable.", author: "— Senior Developer, Wipro Technologies" },
+                { quote: "His scripting skills are top-notch. He can take a complex requirement and turn it into a clean, efficient solution.", author: "— Technical Manager" }
+            ];
+            let testimonialIndex = 0;
+            let testimonialCharIndex = 0;
+            const testimonialTextElement = document.getElementById('testimonial-text');
+            const testimonialAuthorElement = document.getElementById('testimonial-author');
+
+            function typeTestimonial() {
+                const current = testimonials[testimonialIndex];
+                testimonialAuthorElement.textContent = ''; // Clear author initially
+                if (testimonialCharIndex < current.quote.length) {
+                    testimonialTextElement.textContent += current.quote.charAt(testimonialCharIndex);
+                    testimonialCharIndex++;
+                    setTimeout(typeTestimonial, 40);
+                } else {
+                    testimonialAuthorElement.textContent = current.author;
+                    setTimeout(eraseTestimonial, 4000); // Wait longer before erasing
+                }
+            }
+
+            function eraseTestimonial() {
+                const current = testimonials[testimonialIndex];
+                if (testimonialCharIndex > 0) {
+                    testimonialTextElement.textContent = current.quote.substring(0, testimonialCharIndex - 1);
+                    testimonialCharIndex--;
+                    setTimeout(eraseTestimonial, 20);
+                } else {
+                    testimonialIndex = (testimonialIndex + 1) % testimonials.length;
+                    setTimeout(typeTestimonial, speed);
+                }
+            }
+
+
+            // --- Particle Canvas Animation ---
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let particlesArray;
+
+            // Set canvas size
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            // Particle class
+            class Particle {
+                constructor(x, y, directionX, directionY, size, color) {
+                    this.x = x;
+                    this.y = y;
+                    this.directionX = directionX;
+                    this.directionY = directionY;
+                    this.size = size;
+                    this.color = color;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+                update() {
+                    if (this.x > canvas.width || this.x < 0) {
+                        this.directionX = -this.directionX;
+                    }
+                    if (this.y > canvas.height || this.y < 0) {
+                        this.directionY = -this.directionY;
+                    }
+                    this.x += this.directionX;
+                    this.y += this.directionY;
+                    this.draw();
+                }
+            }
+
+            // Create particle array
+            function init() {
+                particlesArray = [];
+                let numberOfParticles = (canvas.height * canvas.width) / 9000;
+                for (let i = 0; i < numberOfParticles; i++) {
+                    let size = (Math.random() * 2) + 1;
+                    let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                    let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                    let directionX = (Math.random() * .4) - .2;
+                    let directionY = (Math.random() * .4) - .2;
+                    let color = 'rgba(100, 255, 218, 0.5)'; // primary-accent with alpha
+
+                    particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+                }
+            }
+
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                ctx.clearRect(0, 0, innerWidth, innerHeight);
+
+                for (let i = 0; i < particlesArray.length; i++) {
+                    particlesArray[i].update();
+                }
+                connect();
+            }
+
+            // Connect particles with lines
+            function connect() {
+                let opacityValue = 1;
+                for (let a = 0; a < particlesArray.length; a++) {
+                    for (let b = a; b < particlesArray.length; b++) {
+                        let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) +
+                                       ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                        if (distance < (canvas.width / 7) * (canvas.height / 7)) {
+                            opacityValue = 1 - (distance / 20000);
+                            ctx.strokeStyle = `rgba(142, 146, 176, ${opacityValue})`; // slate with dynamic alpha
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                            ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+            
+            // Resize event
+            window.addEventListener('resize', () => {
+                canvas.width = innerWidth;
+                canvas.height = innerHeight;
+                init();
+            });
+
+            // --- Scroll to Top Button Logic ---
+            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    scrollToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
+                } else {
+                    scrollToTopBtn.classList.add('opacity-0', 'pointer-events-none');
+                }
+            });
+
+            // Start animations
+            init();
+            animate();
+            typeWriter();
+            typeTestimonial();
+        });
+    </script>
+</body>
+</html>
