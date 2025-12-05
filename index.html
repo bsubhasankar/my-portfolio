@@ -1,1057 +1,730 @@
-	<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subhasankar - ServiceNow Developer Portfolio</title>
+    <title>Subhasankar | ServiceNow Architect</title>
     <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230a192f'/%3E%3Ctext x='50' y='50' font-size='50' font-family='Inter, sans-serif' fill='%2364ffda' text-anchor='middle' dy='.3em' font-weight='600'%3ESB%3C/text%3E%3C/svg%3E">
-    <!-- Tailwind CSS CDN -->
+    <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23032D42'/%3E%3Ctext x='50' y='50' font-size='50' font-family='sans-serif' fill='%2386ED78' text-anchor='middle' dy='.3em' font-weight='bold'%3ESB%3C/text%3E%3C/svg%3E">
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
     <script>
-        // Updated Tailwind CSS configuration with a more vibrant palette
         tailwind.config = {
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
                     colors: {
-                        'dark-navy': '#0a192f',      // A deep navy for the main background
-                        'light-navy': '#112240',     // A slightly lighter navy for cards/elements
-                        'lightest-slate': '#ccd6f6',  // For headings and bright text
-                        'slate': '#8892b0',          // For body text and less prominent info
-                        'primary-accent': '#64ffda',    // A vibrant teal/mint for accents
-                        'secondary-accent': '#7f5af0',  // A vibrant purple for secondary accents
+                        'sn-dark': '#031b25',     /* Deep ServiceNow-ish Navy */
+                        'sn-card': '#05232e',     /* Slightly lighter for cards */
+                        'sn-green': '#86ED78',    /* ServiceNow Brand Green */
+                        'sn-teal': '#29B6F6',     /* Workflow Teal */
+                        'sn-purple': '#8E44AD',   /* Integration Purple */
+                        'text-main': '#E1E8EB',
+                        'text-muted': '#9AA5B1',
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
                     }
                 }
             }
         }
     </script>
-    <!-- Google Fonts - Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Font Awesome for social icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* Base styles using the new color palette */
+        /* Base & Scrollbar */
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0a192f; /* dark-navy */
-            color: #8892b0; /* slate */
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
+            background-color: #031b25;
+            color: #E1E8EB;
+            overflow-x: hidden;
+            cursor: none;
+            /* Hide default cursor for custom one */
         }
 
-        /* Page Loader Styles */
-        #loader {
+        /* Custom Cursor */
+        #cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #86ED78;
+            border-radius: 50%;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #0a192f;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             z-index: 9999;
-            transition: opacity 0.75s, visibility 0.75s;
-        }
-        #loader.loaded {
-            opacity: 0;
-            visibility: hidden;
-        }
-        #loader .logo {
-            width: 80px;
-            height: 80px;
-            animation: pulse 1.5s infinite ease-in-out;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            pointer-events: none;
+            transition: transform 0.1s;
         }
 
+        #cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #86ED78;
+            border-radius: 50%;
+            position: fixed;
+            z-index: 9998;
+            pointer-events: none;
+            transition: transform 0.15s, width 0.3s, height 0.3s;
+            transform: translate(-50%, -50%);
+        }
 
-        /* Canvas for particle background */
-        #particle-canvas {
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #031b25;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1f4e5a;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #86ED78;
+        }
+
+        /* Canvas Background */
+        #canvas-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1; /* Place it behind all content */
-            opacity: 0.5;
-            transition: opacity 0.3s;
-        }
-
-        /* Header styling with frosted glass effect */
-        #main-header {
-            background-color: rgba(10, 25, 47, 0.85); /* dark-navy with alpha */
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: background-color 0.3s;
-        }
-
-        /* Section heading style */
-        .section-heading {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 2.5rem;
-            font-size: 2.25rem;
-            font-weight: 700;
-            color: #ccd6f6; /* lightest-slate */
-            transition: color 0.3s;
-        }
-        .section-heading::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 60%;
-            height: 3px;
-            background-color: #64ffda; /* primary-accent */
-            border-radius: 9999px;
-            transition: background-color 0.3s;
-        }
-
-        /* Hero section text styling */
-        .hero-intro {
-            color: #64ffda; /* primary-accent */
-            font-size: 1.125rem;
-            margin-bottom: 1rem;
-            transition: color 0.3s;
-        }
-        .hero-name {
-            font-size: clamp(40px, 8vw, 80px); /* Responsive font size */
-            font-weight: 800;
-            color: #ccd6f6; /* lightest-slate */
-            line-height: 1.1;
-            transition: color 0.3s;
-        }
-        .hero-title {
-            font-size: clamp(30px, 6vw, 60px); /* Responsive font size */
-            font-weight: 800;
-            color: #8892b0; /* slate */
-            line-height: 1.1;
-            min-height: 140px; /* Reserve space to prevent layout shift */
-            transition: color 0.3s;
-        }
-        
-        /* Typewriter cursor effect */
-        .typewriter-cursor {
-            display: inline-block;
-            width: 4px;
-            height: 1em;
-            background-color: #64ffda; /* primary-accent */
-            animation: blink 0.7s infinite;
-            vertical-align: bottom;
-            margin-left: 8px;
-            transition: background-color 0.3s;
-        }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        /* Modern button style with gradient */
-        .btn-primary {
-            background-image: linear-gradient(to right, #7f5af0 0%, #64ffda 51%, #7f5af0 100%);
-            background-size: 200% auto;
-            color: #0a192f;
-            transition: 0.5s;
-        }
-        .btn-primary:hover {
-            background-position: right center; /* change the direction of the change here */
-            color: #fff;
-            text-decoration: none;
-        }
-        .btn-secondary {
-            border: 2px solid #64ffda;
-            color: #64ffda;
-            transition: all 0.3s ease;
-        }
-        .btn-secondary:hover {
-            background-color: rgba(100, 255, 218, 0.1);
-        }
-
-        /* Card styling */
-        .card {
-            background-color: #112240; /* light-navy */
-            transition: all 0.3s ease-in-out;
-            border: 1px solid transparent;
-        }
-        .card:hover {
-            transform: translateY(-8px);
-            border-color: #64ffda; /* primary-accent */
-            box-shadow: 0 10px 30px -15px rgba(2,12,27,0.7);
-        }
-
-        /* Skill list styling */
-        .skill-item, .responsibility-item {
-            position: relative;
-            padding-left: 20px;
-            margin-bottom: 10px;
-        }
-        .skill-item::before, .responsibility-item::before {
-            content: '▹';
-            position: absolute;
-            left: 0;
-            color: #64ffda; /* primary-accent */
-            transition: color 0.3s;
-        }
-
-        /* Experience section styling */
-        .experience-item {
-            background-color: #112240;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            border-left: 3px solid transparent;
-            transition: all 0.3s ease;
-        }
-        .experience-item:hover {
-            border-left-color: #64ffda;
-            transform: translateX(5px);
-        }
-        .job-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #ccd6f6;
-            transition: color 0.3s;
-        }
-        .company-name {
-            color: #64ffda;
-            transition: color 0.3s;
-        }
-        .job-meta {
-            font-size: 0.875rem;
-            color: #8892b0;
-            transition: color 0.3s;
-        }
-
-        /* Testimonials Section */
-        #testimonial-text {
-            font-size: 1.25rem;
-            font-style: italic;
-            min-height: 100px; /* Prevent layout shift */
-        }
-        #testimonial-author {
-            font-weight: 600;
-            color: #ccd6f6;
-            transition: color 0.3s;
-        }
-
-        /* Insights Scroller */
-        .insights-container {
-            height: 120px; /* Adjust height to show 2 items */
-            overflow: hidden;
-            position: relative;
-        }
-        .insights-scroller {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            animation: scroll-up 20s linear infinite;
-        }
-        .insights-container:hover .insights-scroller {
-            animation-play-state: paused;
-        }
-        @keyframes scroll-up {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-50%); } /* Scroll up by half the height (since items are duplicated) */
-        }
-
-
-        /* Social links styling */
-        .social-links a {
-            color: #ccd6f6;
-            font-size: 1.5rem;
-            transition: all 0.3s ease;
-        }
-        .social-links a:hover {
-            color: #64ffda; /* primary-accent */
-            transform: translateY(-3px);
-        }
-
-        /* Professional photo styling */
-        .profile-photo-container {
-            position: relative;
-            max-width: 350px;
-        }
-        .profile-photo-container::after {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 100%;
-            height: 100%;
-            border: 2px solid #64ffda;
-            border-radius: 8px;
             z-index: -1;
+            /* Gradient finish */
+            background: radial-gradient(circle at center, #05232e 0%, #031b25 100%);
+        }
+
+        /* Glass Cards */
+        .glass-card {
+            background: rgba(5, 35, 46, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(134, 237, 120, 0.1);
+            border-radius: 1rem;
             transition: all 0.3s ease;
         }
-        .profile-photo-container:hover::after {
-            top: 15px;
-            left: 15px;
-        }
-        .profile-photo {
-            border-radius: 8px;
-            filter: grayscale(80%) contrast(1.1);
-            transition: filter 0.3s ease;
-        }
-        .profile-photo:hover {
-            filter: grayscale(0%) contrast(1);
+
+        .glass-card:hover {
+            border-color: rgba(134, 237, 120, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
         }
 
-        /* Mobile Menu Styles */
-        #mobile-menu-button span {
-            position: absolute;
-            width: 24px;
-            height: 2px;
-            background-color: #ccd6f6;
-            border-radius: 2px;
-            transition: all 0.3s ease-in-out;
-        }
-        .hamburger-top { top: 6px; }
-        .hamburger-middle { top: 14px; }
-        .hamburger-bottom { top: 22px; }
-
-        #mobile-menu-button.is-active .hamburger-top {
-            transform: rotate(45deg) translateY(6px) translateX(6px);
-        }
-        #mobile-menu-button.is-active .hamburger-middle {
-            opacity: 0;
-        }
-        #mobile-menu-button.is-active .hamburger-bottom {
-            transform: rotate(-45deg) translateY(-6px) translateX(6px);
+        /* Typewriter Cursor */
+        .type-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1.2em;
+            background: #86ED78;
+            vertical-align: bottom;
+            animation: blink 1s infinite;
         }
 
-        #mobile-menu {
-            transform: translateX(100%);
-            transition: transform 0.3s ease-in-out;
-            visibility: hidden;
-        }
-        #mobile-menu.is-open {
-            transform: translateX(0);
-            visibility: visible;
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
         }
 
-        #mobile-menu.is-open a, #mobile-menu.is-open button {
-            opacity: 0;
-            animation: fadeIn 0.3s ease forwards;
-        }
-        #mobile-menu.is-open a:nth-child(1) { animation-delay: 0.1s; }
-        #mobile-menu.is-open a:nth-child(2) { animation-delay: 0.2s; }
-        #mobile-menu.is-open a:nth-child(3) { animation-delay: 0.3s; }
-        #mobile-menu.is-open a:nth-child(4) { animation-delay: 0.4s; }
-        #mobile-menu.is-open a:nth-child(5) { animation-delay: 0.5s; }
-        #mobile-menu.is-open button:nth-child(6) { animation-delay: 0.6s; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Floating Animation */
+        .float-img {
+            animation: float 6s ease-in-out infinite;
         }
 
+        @keyframes float {
 
-        /* Light Mode Styles */
-        body.light-mode {
-            background-color: #f0f2f5; /* Light gray background */
-            color: #4a5568; /* Darker text */
-        }
-        body.light-mode .section-heading,
-        body.light-mode .hero-name,
-        body.light-mode .job-title,
-        body.light-mode .text-lightest-slate,
-        body.light-mode #testimonial-author,
-        body.light-mode .social-links a {
-            color: #1a202c; /* Very dark text for headings */
-        }
-        body.light-mode .hero-title,
-        body.light-mode .text-slate,
-        body.light-mode .job-meta {
-            color: #4a5568;
-        }
-        body.light-mode #main-header,
-        body.light-mode .card,
-        body.light-mode .experience-item,
-        body.light-mode .bg-light-navy,
-        body.light-mode #mobile-menu {
-            background-color: #ffffff; /* White background for elements */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
-        }
-        body.light-mode #main-header {
-            background-color: rgba(255, 255, 255, 0.85);
-        }
-        body.light-mode .btn-secondary {
-            color: #2c5282; /* Dark blue */
-            border-color: #2c5282;
-        }
-        body.light-mode .btn-secondary:hover {
-             background-color: rgba(44, 82, 130, 0.1);
-        }
-        body.light-mode .company-name,
-        body.light-mode .hero-intro,
-        body.light-mode .skill-item::before,
-        body.light-mode .responsibility-item::before,
-        body.light-mode .text-primary-accent,
-        body.light-mode #typewriter,
-        body.light-mode .section-heading::after {
-            color: #2c5282; /* Dark blue for accents */
-            background-color: transparent; /* override for after element */
-        }
-        body.light-mode .typewriter-cursor {
-            background-color: #2c5282;
-        }
-        body.light-mode #particle-canvas {
-            opacity: 0.1; /* Make particles much more subtle in light mode */
-        }
-        body.light-mode .experience-item:hover, body.light-mode .profile-photo-container::after {
-            border-color: #2c5282;
-        }
-        body.light-mode .social-links a:hover {
-            color: #2c5282;
-        }
-        body.light-mode #mobile-menu-button span {
-            background-color: #1a202c;
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
         }
 
+        /* Link Hover Effect on Cursor */
+        a:hover~#cursor-outline,
+        button:hover~#cursor-outline {
+            transform: translate(-50%, -50%) scale(1.5);
+            background-color: rgba(134, 237, 120, 0.1);
+            border-color: transparent;
+        }
     </style>
 </head>
-<body class="antialiased leading-relaxed">
 
-    <!-- Page Loader -->
-    <div id="loader">
-        <div class="logo">
-            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
-                <rect width='100' height='100' rx='20' fill='transparent'/>
-                <text x='50' y='50' font-size='50' font-family='Inter, sans-serif' fill='%2364ffda' text-anchor='middle' dy='.3em' font-weight='600'>SB</text>
-            </svg>
-        </div>
-    </div>
+<body class="selection:bg-sn-green selection:text-sn-dark">
 
+    <!-- Interactive Background -->
+    <canvas id="canvas-bg"></canvas>
 
-    <!-- The particle background canvas -->
-    <canvas id="particle-canvas"></canvas>
+    <!-- Custom Cursor Custom Elements -->
+    <div id="cursor-dot"></div>
+    <div id="cursor-outline"></div>
 
-    <!-- Header Section -->
-    <header id="main-header" class="py-4 sticky top-0 z-50 shadow-lg transition-all duration-300 ease-in-out">
-        <nav class="container flex justify-between items-center">
-            <a href="#" class="text-2xl font-extrabold text-primary-accent rounded-lg p-2 flex items-center">
-                SB
+    <!-- Navigation (Floating) -->
+    <nav class="fixed top-0 w-full z-50 p-4 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto flex justify-between items-center glass-card px-6 py-3">
+            <a href="#" class="text-2xl font-bold font-mono tracking-tighter text-sn-green">SB<span
+                    class="text-white">.dev</span></a>
+
+            <div class="hidden md:flex space-x-8 text-sm font-medium text-text-muted">
+                <a href="#about" class="hover:text-sn-green transition cursor-none-target">About</a>
+                <a href="#skills" class="hover:text-sn-green transition cursor-none-target">Skills</a>
+                <a href="#timeline" class="hover:text-sn-green transition cursor-none-target">Timeline</a>
+                <a href="#workflow" class="hover:text-sn-green transition cursor-none-target">Workflow</a>
+            </div>
+
+            <a href="https://drive.google.com/file/d/1QI35ptHjqD_oMIO5lo1GV856XpaR70wb/view?usp=sharing" target="_blank"
+                class="px-5 py-2 bg-sn-green text-sn-dark font-bold rounded-lg hover:bg-white transition shadow-lg shadow-sn-green/20 cursor-none-target">
+                Resume
             </a>
-            <ul class="hidden md:flex items-center space-x-6">
-                <li><a href="#about" class="text-slate hover:text-primary-accent transition duration-300 ease-in-out font-medium px-3 py-2">About</a></li>
-                <li><a href="#skills" class="text-slate hover:text-primary-accent transition duration-300 ease-in-out font-medium px-3 py-2">Skills</a></li>
-                <li><a href="#experience" class="text-slate hover:text-primary-accent transition duration-300 ease-in-out font-medium px-3 py-2">Experience</a></li>
-                <li><a href="#contact" class="text-slate hover:text-primary-accent transition duration-300 ease-in-out font-medium px-3 py-2">Contact</a></li>
-                <li><a href="https://drive.google.com/file/d/1QI35ptHjqD_oMIO5lo1GV856XpaR70wb/view?usp=sharing" class="btn-secondary px-4 py-2 rounded-md text-sm">Resume</a></li>
-                <!-- Light/Dark Mode Toggle -->
-                <li>
-                    <button id="theme-toggle" class="text-slate hover:text-primary-accent text-xl">
-                        <i class="fas fa-sun"></i>
-                    </button>
-                </li>
-            </ul>
-            <!-- Mobile Menu Button -->
-             <div class="md:hidden">
-                <button id="mobile-menu-button" class="z-50 relative w-8 h-8">
-                    <span class="hamburger-top"></span>
-                    <span class="hamburger-middle"></span>
-                    <span class="hamburger-bottom"></span>
-                </button>
-            </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
 
-    <!-- Mobile Menu -->
-    <div id="mobile-menu" class="fixed inset-y-0 right-0 bg-light-navy w-3/4 max-w-sm z-40 flex flex-col items-center justify-center space-y-8 text-2xl">
-        <a href="#about" class="mobile-menu-link text-slate hover:text-primary-accent">About</a>
-        <a href="#skills" class="mobile-menu-link text-slate hover:text-primary-accent">Skills</a>
-        <a href="#experience" class="mobile-menu-link text-slate hover:text-primary-accent">Experience</a>
-        <a href="#contact" class="mobile-menu-link text-slate hover:text-primary-accent">Contact</a>
-        <a href="https://drive.google.com/file/d/1QI35ptHjqD_oMIO5lo1GV856XpaR70wb/view?usp=sharing" class="btn-secondary px-6 py-3">Resume</a>
-        <button id="mobile-theme-toggle" class="text-slate hover:text-primary-accent text-3xl">
-            <i class="fas fa-sun"></i>
-        </button>
-    </div>
+    <!-- SECTION 1: HERO (The Hook) -->
+    <section id="about" class="min-h-screen flex items-center justify-center pt-20 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
 
-    <!-- Main Content Wrapper -->
-    <main class="container">
-
-        <!-- Hero Section -->
-        <section id="home" class="py-20 lg:py-28 flex items-center min-h-screen">
-            <div class="z-10">
-                <p class="hero-intro">Hi, my name is</p>
-                <h1 class="hero-name">Subhasankar Badatya.</h1>
-                <h2 class="hero-title">I'm a <span id="typewriter" class="text-primary-accent"></span><span class="typewriter-cursor"></span></h2>
-                <p class="max-w-xl mt-6 text-slate leading-relaxed">
-                    I'm a ServiceNow Developer passionate about building practical and user-focused solutions that simplify business processes. For me, ServiceNow isn't just a platform — it's a toolkit to improve how people work every day.
+            <div data-aos="fade-right">
+                <div
+                    class="inline-block px-3 py-1 mb-4 border border-sn-green/30 rounded-full text-xs font-mono text-sn-green bg-sn-green/10">
+                    <i class="fa-solid fa-circle-check mr-2"></i>Available for Projects
+                </div>
+                <h1 class="text-5xl lg:text-7xl font-bold leading-tight mb-6">
+                    Automating <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-sn-green to-sn-teal">Enterprise
+                        Flow.</span>
+                </h1>
+                <p class="text-xl text-text-muted mb-8 max-w-lg leading-relaxed">
+                    I am <span class="text-white font-semibold">Subhasankar Badatya</span>. <br>
+                    I design robust <span id="typewriter" class="text-sn-green font-mono"></span><span
+                        class="type-cursor"></span> solutions.
                 </p>
-                <div class="mt-12 flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
-                    <a href="#experience" class="btn-primary text-lg font-semibold px-8 py-4 rounded-lg shadow-lg">
-                        Check out my experience!
+
+                <div class="flex flex-wrap gap-4">
+                    <a href="#timeline"
+                        class="px-8 py-4 bg-white text-sn-dark font-bold rounded-xl hover:scale-105 transition shadow-xl cursor-none-target">
+                        View Journey
                     </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section id="about" class="py-16 lg:py-24">
-            <h2 class="section-heading">About Me</h2>
-            <div class="flex flex-col lg:flex-row items-start gap-12">
-                <div class="lg:w-3/5 space-y-4 text-slate">
-                    <p>
-                        I am a <span class="text-primary-accent font-semibold">ServiceNow Developer with ITSM & ITOM </span> with hands-on
-      experience in administering, enhancing, and supporting the ServiceNow platform. My expertise covers
-      <strong>ITOM modules (Discovery, Event, Service Mapping)</strong>, <strong>CMDB Administration</strong>, and
-      <strong>Incident & Automation Integration</strong>.
-                    </p>
-                    <p>
-                        I have configured and supported <strong>Discovery Schedules, MID Servers, and Credentials</strong> to ensure
-      seamless CMDB data ingestion. I optimize <strong>Event Rules and Alert Correlation policies</strong> to reduce
-      noise and streamline incident response. I maintain and improve <strong>CMDB Data Manager policies</strong>
-      (Retire, Delete, Archive) to ensure high-quality and accurate configuration data.
-                    </p>
-                    <p class="text-slate leading-relaxed mt-4">
-      On the development side, I build reliable solutions with <strong>Business Rules, Client & Server Scripts, Fix
-      Scripts, Background Scripts, Scheduled Jobs, Transform Maps, and Transform Scripts</strong>. I also provide
-      <strong>ITOM production support</strong> by troubleshooting issues, resolving reconciliation errors,  and
-      automating alerts and events.
-    </p>
-    <p class="text-slate leading-relaxed mt-4">
-      Beyond technical expertise, I bring <strong>Agile methodology experience, problem-solving, debugging,
-      and strong communication skills</strong> that help me collaborate effectively with cross-functional teams.
-    </p>
-                    <p class="font-semibold text-lightest-slate mt-6">
-                        🔧 Technologies I work with:
-                    </p>
-                    <ul class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                        <li class="skill-item">JavaScript</li>
-                        <li class="skill-item">Servicenow ITSM</li>
-                        <li class="skill-item">REST & SOAP APIs</li>
-                        <li class="skill-item">Servicenow ITOM </li>
-                        <li class="skill-item">LDAP Integration</li>
-                        <li class="skill-item">Workflow & Flow Designer</li>
-                        
-                    </ul>
-                </div>
-                <div class="lg:w-2/5 flex justify-center items-start mt-12 lg:mt-0">
-                    <div class="profile-photo-container">
-                         <img src="Img/Remove background project.png" style="margin-top: -5cm;" alt="Subhasankar Badatya" class="profile-photo w-full h-auto object-cover shadow-xl" />
+                    <div class="flex items-center gap-4 text-2xl text-text-muted px-4">
+                        <a href="https://in.linkedin.com/in/subhasankar-badatya"
+                            class="hover:text-sn-green transition cursor-none-target"><i
+                                class="fa-brands fa-linkedin"></i></a>
+                        <a href="https://github.com/bsubhasankar"
+                            class="hover:text-sn-green transition cursor-none-target"><i
+                                class="fa-brands fa-github"></i></a>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Skills Section -->
-        <section id="skills" class="py-16 lg:py-24">
-            <h2 class="section-heading">My Skills</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-<!-- Skill Card 1: ServiceNow Platform -->
-<div class="card p-6 rounded-lg">
-  <h3 class="text-xl font-semibold mb-4 text-lightest-slate">ServiceNow Platform</h3>
-  <ul class="space-y-2 text-slate">
-    <li class="skill-item">ITSM</li>
-    <li class="skill-item">ITOM (Discovery, Event, Service Mapping)</li>
-    <li class="skill-item">CMDB Administration & Data Manager</li>
-    <li class="skill-item">Service Catalog</li>
-    <li class="skill-item">Workflow & Flow Designer</li>
-    <li class="skill-item">Update Set Management</li>
-    <li class="skill-item">REST API Integration</li>
-  </ul>
-</div>
+            <div class="relative flex justify-center" data-aos="fade-left">
+                <!-- Decorative Elements -->
+                <div class="absolute inset-0 bg-gradient-radial from-sn-green/20 to-transparent blur-3xl opacity-30">
+                </div>
 
-<!-- Skill Card 2: Enhancements & Development -->
-<div class="card p-6 rounded-lg">
-  <h3 class="text-xl font-semibold mb-4 text-lightest-slate">Enhancements & Development</h3>
-  <ul class="space-y-2 text-slate">
-    <li class="skill-item">Client & Server Scripts</li>
-    <li class="skill-item">Business Rules, Fix & Background Scripts</li>
-    <li class="skill-item">Scheduled Jobs</li>
-    <li class="skill-item">Discovery Schedules, MID Servers & Credentials</li>
-    <li class="skill-item">Event Rules & Alert Correlation</li>
-    <li class="skill-item">Incident & Automation Integration</li>
-    <li class="skill-item">Transform Maps & Transform Scripts</li>
-  </ul>
-</div>
+                <!-- Profile Image with Tech Frame -->
+                <div class="relative w-80 h-[28rem] rounded-2xl p-2 border border-sn-green/30 bg-sn-card float-img">
+                    <div
+                        class="absolute -top-3 -right-3 w-12 h-12 bg-sn-green rounded-lg flex items-center justify-center text-sn-dark text-xl font-bold shadow-lg z-20">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <!-- CRITICAL: Preserving Image Path -->
+                    <img src="Img/Remove background project.png" alt="Profile"
+                        class="w-full h-full object-cover rounded-xl bg-sn-dark/50">
 
-<!-- Skill Card 3: Professional Skills -->
-<div class="card p-6 rounded-lg">
-  <h3 class="text-xl font-semibold mb-4 text-lightest-slate">Professional Skills</h3>
-  <ul class="space-y-2 text-slate">
-    <li class="skill-item">Agile Methodologies</li>
-    <li class="skill-item">Problem Solving</li>
-    <li class="skill-item">Debugging & Troubleshooting</li>
-    <li class="skill-item">Reconciliation & Data Quality Management</li>
-    <li class="skill-item">Leadership</li>
-    <li class="skill-item">Communication</li>
-  </ul>
-</div>
-
-            </div>
-        </section>
-
-        <!-- Work Experience Section -->
-        <section id="experience" class="py-16 lg:py-24">
-            <h2 class="section-heading">Work Experience</h2>
-            <div class="space-y-8">
-                <!-- Experience Item 1: NTT DATA -->
-                <div class="experience-item">
-                    <div class="flex justify-between items-start mb-2">
+                    <!-- Floating Badge -->
+                    <div class="absolute bottom-6 -left-12 glass-card p-4 flex items-center gap-3 animate-pulse">
+                        <div class="w-10 h-10 rounded-full bg-sn-teal/20 flex items-center justify-center text-sn-teal">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
                         <div>
-                            <h3 class="job-title">Software Developer @ <span class="company-name">NTT DATA</span></h3>
-                        </div>
-                        <div class="text-right">
-                            <p class="job-meta">July 2023 - Present</p>
-                            <p class="job-meta">Hyderabad</p>
+                            <p class="text-xs text-text-muted">Specialization</p>
+                            <p class="font-bold text-sm">ITOM & Discovery</p>
                         </div>
                     </div>
-                    <ul class="text-slate text-sm space-y-2">
-                        <li class="responsibility-item">Administered and enhanced ServiceNow ITOM modules including Discovery, Event & Alert Management, and Service Mapping.</li>
-                            <li class="responsibility-item">Configured Discovery Schedules, MID Servers, and Credentials to ensure smooth data ingestion into CMDB.</li>
-                            <li class="responsibility-item">Maintained and optimized CMDB Data Manager policies (Retire, Delete, Archive) to improve data quality and reconciliation accuracy.</li>
-                            <li class="responsibility-item">Built server-side logic through Business Rules, Script Includes, Fix Scripts, Background Scripts, and Scheduled Jobs.</li>
-                            <li class="responsibility-item">Enhanced Service Catalog functionality by implementing advanced Client Scripts and UI Policies.</li>
-                            <li class="responsibility-item">Integrated alerts with Incident Management by tuning Event Rules and Alert Correlation policies.</li>
-                            <li class="responsibility-item">Managed Data Sources, Import Sets, Transform Maps, and Transform Scripts for reliable data migration.</li>
-                            <li class="responsibility-item">Developed and supported REST API & SOAP integrations for seamless third-party connectivity.</li>
-                            <li class="responsibility-item">Led the development of Custom Applications to support unique business processes beyond ITSM.</li>
-                            <li class="responsibility-item">Delivered ITOM production support by troubleshooting issues, resolving reconciliation errors, and automating alerts/events.</li>
-                                <li class="responsibility-item">Actively contributed to Agile ceremonies including sprint planning, backlog refinement, and daily stand-ups.</li>
+                </div>
+            </div>
 
-                    </ul>
-                </div>
-                <!-- Experience Item 2: Wipro -->
-                <div class="experience-item">
-                    <div class="flex justify-between items-start mb-2">
-                        <div>
-                            <h3 class="job-title">ServiceNow Developer @ <span class="company-name">WIPRO Technologies (WILP - WASE)</span></h3>
-                        </div>
-                        <div class="text-right">
-                            <p class="job-meta">Feb 2022 - July 2023</p>
-                            <p class="job-meta">Hyderabad</p>
-                        </div>
-                    </div>
-                    <ul class="text-slate text-sm space-y-2">
-                        <li class="responsibility-item">Worked on various ITSM modules (Incident, Problem, Change).</li>
-                        <li class="responsibility-item">Managed Tables & Records, creating Users, Groups & Roles.</li>
-                        <li class="responsibility-item">Experienced in Service Catalog, Variables, Variable Sets, Record Producer, Order Guide and Workflows.</li>
-                        <li class="responsibility-item">Experienced in REST API Integration and LDAP.</li>
-                        <li class="responsibility-item">Knowledgeable in SOAP and LDAP Integration.</li>
-                        <li class="responsibility-item">Handled Client Scripts, UI Policies, UI Action, Update sets, Email & Notifications and Flow Designer.</li>
-                        <li class="responsibility-item">Wrote server-side scripts using Business Rules and Background Scripts.</li>
-                    </ul>
-                </div>
-                <!-- Experience Item 3: Bitwise -->
-                <div class="experience-item">
-                    <div class="flex justify-between items-start mb-2">
-                        <div>
-                            <h3 class="job-title">Intern @ <span class="company-name">Bitwise Global</span></h3>
-                        </div>
-                        <div class="text-right">
-                            <p class="job-meta">May 2021 - Nov 2022</p>
-                            <p class="job-meta">Remote</p>
-                        </div>
-                    </div>
-                    <ul class="text-slate text-sm space-y-2">
-                        <li class="responsibility-item">Developed web-based forms and UI components using JavaScript, HTML/CSS, and Bootstrap.</li>
-                        <li class="responsibility-item">6-month intensive internship focused on frontend development.</li>
-                        <li class="responsibility-item">Gained hands-on experience in modern web development practices.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+        </div>
 
-        <!-- Latest Insights Section -->
-       <section id="insights" class="py-16 lg:py-24">
-    <h2 class="section-heading">Latest Insights</h2>
-    <div class="bg-light-navy p-6 rounded-lg insights-container">
-        <div class="insights-scroller">
-            <div class="insight-item mb-4">
-                <h4 class="font-semibold text-lightest-slate">AI Agents in ServiceNow</h4>
-                <p class="text-slate text-sm">Discover how AI Agents automate tasks and improve ITSM and ITOM workflows.</p>
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-sn-green/50">
+            <i class="fa-solid fa-chevron-down text-2xl"></i>
+        </div>
+    </section>
+
+
+    <!-- SECTION 2: STATS & SKILLS (The Toolkit) -->
+    <section id="skills" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-6">
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+                <div class="glass-card p-6 text-center" data-aos="fade-up" data-aos-delay="0">
+                    <h3 class="text-3xl font-bold text-white mb-1">4+</h3>
+                    <p class="text-sm font-mono text-sn-green">Years Experience</p>
+                </div>
+                <div class="glass-card p-6 text-center" data-aos="fade-up" data-aos-delay="100">
+                    <h3 class="text-3xl font-bold text-white mb-1">10+</h3>
+                    <p class="text-sm font-mono text-sn-teal">Projects Delivered</p>
+                </div>
+                <div class="glass-card p-6 text-center" data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="text-3xl font-bold text-white mb-1">ITOM</h3>
+                    <p class="text-sm font-mono text-sn-purple">Specialist</p>
+                </div>
+                <div class="glass-card p-6 text-center" data-aos="fade-up" data-aos-delay="300">
+                    <h3 class="text-3xl font-bold text-white mb-1">Hyd</h3>
+                    <p class="text-sm font-mono text-text-muted">Based in India</p>
+                </div>
             </div>
-            <div class="insight-item mb-4">
-                <h4 class="font-semibold text-lightest-slate">Discovery Pattern Optimization</h4>
-                <p class="text-slate text-sm">Best practices for tuning discovery probes and sensors for accurate CI detection.</p>
+
+            <!-- Certifications REMOVED as requested -->
+
+            <!-- Skills Grid -->
+            <h2 class="text-3xl font-bold mb-8 flex items-center gap-3">
+                <i class="fa-solid fa-layer-group text-sn-teal"></i> Technical Arsenal
+            </h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Left: Core -->
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="font-mono text-sm text-sn-green">ServiceNow Platform (ITSM/ITOM)</span>
+                            <span class="text-xs text-text-muted">95%</span>
+                        </div>
+                        <div class="h-2 bg-sn-card rounded-full overflow-hidden">
+                            <div class="h-full bg-sn-green w-[95%]"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="font-mono text-sm text-sn-teal">Discovery & Service Mapping</span>
+                            <span class="text-xs text-text-muted">90%</span>
+                        </div>
+                        <div class="h-2 bg-sn-card rounded-full overflow-hidden">
+                            <div class="h-full bg-sn-teal w-[90%]"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="font-mono text-sm text-sn-purple">JavaScript (ES6+) & Glide API</span>
+                            <span class="text-xs text-text-muted">85%</span>
+                        </div>
+                        <div class="h-2 bg-sn-card rounded-full overflow-hidden">
+                            <div class="h-full bg-sn-purple w-[85%]"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Categories -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="glass-card p-4 hover:bg-sn-green/5 transition cursor-none-target">
+                        <i class="fa-solid fa-network-wired text-sn-green mb-3 text-xl"></i>
+                        <h4 class="font-bold mb-1">Discovery</h4>
+                        <p class="text-xs text-text-muted">Probes, Sensors, Pattern Design</p>
+                    </div>
+                    <div class="glass-card p-4 hover:bg-sn-teal/5 transition cursor-none-target">
+                        <i class="fa-solid fa-bolt text-sn-teal mb-3 text-xl"></i>
+                        <h4 class="font-bold mb-1">Event Mgmt</h4>
+                        <p class="text-xs text-text-muted">Alert Correlation, Rule Sets</p>
+                    </div>
+                    <div class="glass-card p-4 hover:bg-sn-purple/5 transition cursor-none-target">
+                        <i class="fa-solid fa-gears text-sn-purple mb-3 text-xl"></i>
+                        <h4 class="font-bold mb-1">Automation</h4>
+                        <p class="text-xs text-text-muted">Flow Designer, IntegrationHub</p>
+                    </div>
+                    <div class="glass-card p-4 hover:bg-white/5 transition cursor-none-target">
+                        <i class="fa-solid fa-database text-white mb-3 text-xl"></i>
+                        <h4 class="font-bold mb-1">CMDB</h4>
+                        <p class="text-xs text-text-muted">Health, Reconciliation, IRE</p>
+                    </div>
+                </div>
             </div>
-            <div class="insight-item mb-4">
-                <h4 class="font-semibold text-lightest-slate">Event to Incident Automation</h4>
-                <p class="text-slate text-sm">Learn how alerts are automatically converted into incidents with correlation rules.</p>
-            </div>
-            <div class="insight-item mb-4">
-                <h4 class="font-semibold text-lightest-slate">CMDB Data Certification</h4>
-                <p class="text-slate text-sm">Ensure CMDB health with data certification, reconciliation, and compliance checks.</p>
-            </div>
-            <div class="insight-item mb-4">
-                <h4 class="font-semibold text-lightest-slate">Service Mapping Essentials</h4>
-                <p class="text-slate text-sm">Map business services and visualize application dependencies for better insights.</p>
-            </div>
-            <div class="insight-item mb-4">
-                <h4 class="font-semibold text-lightest-slate">ServiceNow Integrations</h4>
-                <p class="text-slate text-sm">Connect ServiceNow with third-party apps using REST API and secure best practices.</p>
+
+        </div>
+    </section>
+
+
+    <!-- SECTION 3: TIMELINE JOURNEY (Long Scroll) -->
+    <section id="timeline" class="py-20 relative bg-[#02121a]">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-4xl font-bold mb-16 text-center">Professional Journey</h2>
+
+            <!-- Central Line -->
+            <div class="relative">
+                <div
+                    class="absolute left-0 md:left-1/2 h-full w-0.5 bg-gradient-to-b from-sn-green via-sn-teal to-transparent transform md:-translate-x-1/2">
+                </div>
+
+                <!-- Role 1 -->
+                <div class="relative mb-16 md:flex justify-between items-center group" data-aos="fade-up">
+                    <div class="md:w-[45%] mb-4 md:mb-0 md:text-right order-1">
+                        <h3 class="text-2xl font-bold text-white">Software Developer</h3>
+                        <p class="text-sn-green font-mono">NTT DATA</p>
+                        <p class="text-xs text-text-muted mt-1">July 2023 - Present</p>
+                    </div>
+
+                    <div
+                        class="absolute left-[-5px] md:left-1/2 md:transform md:-translate-x-1/2 w-3 h-3 bg-sn-green rounded-full shadow-[0_0_15px_#86ED78] order-2 border-2 border-[#02121a]">
+                    </div>
+
+                    <div class="md:w-[45%] pl-6 md:pl-0 order-3">
+                        <div class="glass-card p-6">
+                            <ul class="text-sm space-y-3 text-gray-300">
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-sn-green mt-1"></i>
+                                    Administered ITOM: Discovery, Event & Service Mapping.</li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-sn-green mt-1"></i>
+                                    Optimized CMDB Data Manager policies for data health.</li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-sn-green mt-1"></i>
+                                    Automated Alert Correlation to reduce noise.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Role 2 -->
+                <div class="relative mb-16 md:flex justify-between items-center group" data-aos="fade-up">
+                    <div class="md:w-[45%] pl-6 md:pl-0 order-3 md:order-1">
+                        <div class="glass-card p-6">
+                            <ul class="text-sm space-y-3 text-gray-300">
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-sn-teal mt-1"></i>
+                                    Implemented full ITSM suite (Incident, Problem, Change).</li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-sn-teal mt-1"></i>
+                                    Built complex catalog items with Flow Designer.</li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-sn-teal mt-1"></i>
+                                    Handled REST Integrations & LDAP config.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div
+                        class="absolute left-[-5px] md:left-1/2 md:transform md:-translate-x-1/2 w-3 h-3 bg-sn-teal rounded-full shadow-[0_0_15px_#29B6F6] order-2 border-2 border-[#02121a]">
+                    </div>
+
+                    <div class="md:w-[45%] mb-4 md:mb-0 order-1 md:order-3">
+                        <h3 class="text-2xl font-bold text-white">ServiceNow Developer</h3>
+                        <p class="text-sn-teal font-mono">WIPRO Technologies</p>
+                        <p class="text-xs text-text-muted mt-1">Feb 2022 - July 2023</p>
+                    </div>
+                </div>
+
+                <!-- Role 3 -->
+                <div class="relative md:flex justify-between items-center group" data-aos="fade-up">
+                    <div class="md:w-[45%] mb-4 md:mb-0 md:text-right order-1">
+                        <h3 class="text-2xl font-bold text-white">Intern</h3>
+                        <p class="text-sn-purple font-mono">Bitwise Global</p>
+                        <p class="text-xs text-text-muted mt-1">May 2021 - Nov 2022</p>
+                    </div>
+
+                    <div
+                        class="absolute left-[-5px] md:left-1/2 md:transform md:-translate-x-1/2 w-3 h-3 bg-sn-purple rounded-full shadow-[0_0_15px_#8E44AD] order-2 border-2 border-[#02121a]">
+                    </div>
+
+                    <div class="md:w-[45%] pl-6 md:pl-0 order-3">
+                        <div class="glass-card p-6">
+                            <p class="text-sm text-gray-300">
+                                Focused on frontend development using HTML, CSS, and Bootstrap. Built responsive web
+                                forms and UI components.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
 
-        <!-- Testimonials Section -->
-        <section id="testimonials" class="py-16 lg:py-24 text-center">
-            <h2 class="section-heading mx-auto">What People Say</h2>
-            <div class="max-w-3xl mx-auto">
-                <p id="testimonial-text" class="text-lightest-slate leading-relaxed"></p>
-                <p id="testimonial-author" class="mt-4 text-slate"></p>
-            </div>
-        </section>
+    <!-- SECTION 4: WORKFLOW / INSIGHTS -->
+    <section id="workflow" class="py-20 max-w-7xl mx-auto px-6">
+        <h2 class="text-3xl font-bold mb-12 text-center">My Workflow</h2>
 
-
-        <!-- Contact Section -->
-        <section id="contact" class="py-16 lg:py-24">
-             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-                <!-- Left Column: Contact Info -->
-                <div>
-                    <h2 class="text-3xl font-bold text-lightest-slate mb-4">Let's Connect</h2>
-                    <p class="text-slate mb-8">
-                        Ready to discuss ServiceNow solutions or explore new opportunities? I'd love to hear from you!
-                    </p>
-                    <div class="space-y-4">
-                        <div class="bg-light-navy p-4 rounded-lg flex items-center space-x-4">
-                            <i class="fa-solid fa-phone text-primary-accent text-xl"></i>
-                            <div>
-                                <h4 class="font-semibold text-lightest-slate">Phone</h4>
-                                <p class="text-slate">+91 8763 715107</p>
-                            </div>
-                        </div>
-                        <div class="bg-light-navy p-4 rounded-lg flex items-center space-x-4">
-                            <i class="fa-solid fa-envelope text-primary-accent text-xl"></i>
-                             <div>
-                                <h4 class="font-semibold text-lightest-slate">Email</h4>
-                                <a href="mailto:bsubhasankar.23@gmail.com" class="text-slate hover:text-primary-accent">bsubhasankar.23@gmail.com</a>
-                            </div>
-                        </div>
-                        <div class="bg-light-navy p-4 rounded-lg flex items-center space-x-4">
-                           <i class="fa-brands fa-linkedin text-primary-accent text-xl"></i>
-                             <div>
-                                <h4 class="font-semibold text-lightest-slate">LinkedIn</h4>
-                                <a href="https://in.linkedin.com/in/subhasankar-badatya" target="_blank" class="text-slate hover:text-primary-accent">Connect with me</a>
-                            </div>
-                        </div>
-                        <div class="bg-light-navy p-4 rounded-lg flex items-center space-x-4">
-                            <i class="fa-solid fa-location-dot text-primary-accent text-xl"></i>
-                             <div>
-                                <h4 class="font-semibold text-lightest-slate">Location</h4>
-                                <p class="text-slate">Hyderabad, Telangana</p>
-                            </div>
-                        </div>
-                    </div>
+        <div class="grid md:grid-cols-3 gap-8 text-center">
+            <!-- Step 1 -->
+            <div class="glass-card p-8 relative overflow-hidden group cursor-none-target" data-aos="fade-up"
+                data-aos-delay="0">
+                <div class="absolute -right-4 -top-4 text-9xl text-white/5 font-bold">1</div>
+                <div
+                    class="w-16 h-16 mx-auto bg-sn-green/20 rounded-full flex items-center justify-center text-sn-green text-2xl mb-6">
+                    <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
-
-                <!-- Right Column: Education & Collaborate -->
-                <div class="space-y-8">
-                    <div class="bg-light-navy p-6 rounded-lg">
-                        <h3 class="text-xl font-bold text-lightest-slate mb-4"><i class="fa-solid fa-graduation-cap text-primary-accent mr-2"></i>Education</h3>
-                        <div class="mb-4">
-                            <h4 class="font-semibold text-lightest-slate">Bachelor of Computer Applications (BCA)</h4>
-                            <p class="text-slate text-sm">Roland Institute of Computer and Management Studies, Brahmapur, Odisha</p>
-                            <p class="text-slate text-xs mt-1">2017 - 2020</p>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-lightest-slate">+2 Science</h4>
-                            <p class="text-slate text-sm">Berhampur City College, Berhampur, Odisha</p>
-                            <p class="text-slate text-xs mt-1">2015 - 2017</p>
-                        </div>
-                    </div>
-                     <div class="p-6 rounded-lg bg-gradient-to-r from-secondary-accent/[.15] to-primary-accent/[.15]">
-                        <h3 class="text-xl font-bold text-lightest-slate mb-2">Ready to Collaborate?</h3>
-                        <p class="text-slate">Let's discuss how I can help optimize your ServiceNow environment and drive digital transformation for your organization.</p>
-                    </div>
-                </div>
-             </div>
-        </section>
-
-    </main>
-
-    <!-- Footer Section -->
-    <footer class="py-8">
-        <div class="container text-center text-sm text-slate">
-            <div class="social-links flex justify-center space-x-6 mb-4">
-                <a href="https://github.com/bsubhasankar" target="_blank" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
-                <a href="https://in.linkedin.com/in/subhasankar-badatya" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-                <a href="https://m.facebook.com/profile.php?id=100007200885989" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
-                <a href="https://instagram.com/subha_sankar_?igshid=MzRlODBiNWFlZA==" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <h3 class="text-xl font-bold mb-2">Discovery</h3>
+                <p class="text-sm text-text-muted">Scanning the infrastructure. Configuring Pattern, Probes & Sensors to
+                    populate CMDB accurately.</p>
             </div>
-            <p>&copy; 2025 Subhasankar Badatya. All rights reserved.</p>
-            <p class="font-mono text-xs mt-2">Designed & Built by Subhasankar Badatya</p>
+
+            <!-- Step 2 -->
+            <div class="glass-card p-8 relative overflow-hidden group cursor-none-target" data-aos="fade-up"
+                data-aos-delay="100">
+                <div class="absolute -right-4 -top-4 text-9xl text-white/5 font-bold">2</div>
+                <div
+                    class="w-16 h-16 mx-auto bg-sn-teal/20 rounded-full flex items-center justify-center text-sn-teal text-2xl mb-6">
+                    <i class="fa-solid fa-filter"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Event Processing</h3>
+                <p class="text-sm text-text-muted">Noise reduction. Applying Event Rules & Correlation to filter
+                    critical signals from the noise.</p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="glass-card p-8 relative overflow-hidden group cursor-none-target" data-aos="fade-up"
+                data-aos-delay="200">
+                <div class="absolute -right-4 -top-4 text-9xl text-white/5 font-bold">3</div>
+                <div
+                    class="w-16 h-16 mx-auto bg-sn-purple/20 rounded-full flex items-center justify-center text-sn-purple text-2xl mb-6">
+                    <i class="fa-solid fa-check-double"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Remediation</h3>
+                <p class="text-sm text-text-muted">Automated incident creation & self-healing workflows via Flow
+                    Designer.</p>
+            </div>
         </div>
-    </footer>
-
-    <!-- Scroll to Top Button -->
-    <button id="scrollToTopBtn" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });"
-            class="fixed bottom-5 right-5 bg-primary-accent text-dark-navy p-3 rounded-full shadow-lg hover:bg-secondary-accent transition-opacity duration-300 opacity-0 pointer-events-none z-50">
-        <i class="fa-solid fa-arrow-up"></i>
-    </button>
+    </section>
 
 
-    <!-- JavaScript for smooth scrolling and dynamic elements -->
+    <!-- SECTION 5: CONTACT -->
+    <section class="py-20 bg-gradient-to-t from-black to-[#02121a]">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-5xl font-bold mb-8 text-white">Let's Automate Success.</h2>
+            <p class="text-xl text-text-muted mb-12">
+                Open to discussing ServiceNow Architecture, Implementation, and Developer roles.
+            </p>
+
+            <div class="inline-flex flex-col md:flex-row gap-6">
+                <a href="mailto:bsubhasankar.23@gmail.com"
+                    class="px-8 py-4 bg-sn-green text-sn-dark font-bold rounded-xl text-lg hover:bg-white transition flex items-center justify-center gap-2 cursor-none-target">
+                    <i class="fa-solid fa-paper-plane"></i> bsubhasankar.23@gmail.com
+                </a>
+                <a href="https://in.linkedin.com/in/subhasankar-badatya"
+                    class="px-8 py-4 border border-sn-green/30 text-sn-green font-bold rounded-xl text-lg hover:border-sn-green transition flex items-center justify-center gap-2 cursor-none-target">
+                    <i class="fa-brands fa-linkedin"></i> LinkedIn
+                </a>
+            </div>
+
+            <div
+                class="mt-16 pt-8 border-t border-white/10 text-sm text-text-muted font-mono flex flex-col md:flex-row justify-between items-center">
+                <span>© 2025 Subhasankar Badatya</span>
+                <span class="mt-2 md:mt-0 flex items-center gap-2"><i class="fa-solid fa-code text-sn-green"></i> Built
+                    with ServiceNow passion</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // --- Page Loader ---
-            const loader = document.getElementById('loader');
-            window.addEventListener('load', () => {
-                loader.classList.add('loaded');
-            });
+        AOS.init({
+            once: true,
+            duration: 800,
+            offset: 100
+        });
 
-            // --- Theme Toggle ---
-            const themeToggle = document.getElementById('theme-toggle');
-            const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
-            const body = document.body;
-            const moonIcon = '<i class="fas fa-moon"></i>';
-            const sunIcon = '<i class="fas fa-sun"></i>';
+        // Typewriter Effect
+        const roles = ["ServiceNow", "ITOM", "CMDB", "Automation"];
+        let roleIndex = 0;
+        let charIndex = 0;
+        const speed = 150;
+        const element = document.getElementById("typewriter");
 
-            const applyTheme = (theme) => {
-                if (theme === 'light') {
-                    body.classList.add('light-mode');
-                    themeToggle.innerHTML = moonIcon;
-                    mobileThemeToggle.innerHTML = moonIcon;
-                } else {
-                    body.classList.remove('light-mode');
-                    themeToggle.innerHTML = sunIcon;
-                    mobileThemeToggle.innerHTML = sunIcon;
-                }
-            };
-
-            const toggleTheme = () => {
-                const currentTheme = body.classList.contains('light-mode') ? 'light' : 'dark';
-                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-                applyTheme(newTheme);
-                localStorage.setItem('theme', newTheme);
-            };
-            
-            themeToggle.addEventListener('click', toggleTheme);
-            mobileThemeToggle.addEventListener('click', toggleTheme);
-
-            const savedTheme = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-            if (savedTheme) {
-                applyTheme(savedTheme);
-            } else if (prefersDark) {
-                applyTheme('dark');
+        function type() {
+            if (charIndex < roles[roleIndex].length) {
+                element.textContent += roles[roleIndex].charAt(charIndex);
+                charIndex++;
+                setTimeout(type, speed);
             } else {
-                applyTheme('light');
+                setTimeout(erase, 2000);
             }
-            
-            // --- Mobile Menu ---
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
+        }
 
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenuButton.classList.toggle('is-active');
-                mobileMenu.classList.toggle('is-open');
+        function erase() {
+            if (charIndex > 0) {
+                element.textContent = roles[roleIndex].substring(0, charIndex - 1);
+                charIndex--;
+                setTimeout(erase, 50);
+            } else {
+                roleIndex = (roleIndex + 1) % roles.length;
+                setTimeout(type, speed);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            setTimeout(type, 1000);
+
+            // Navbar Glass effect on scroll
+            const nav = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    nav.classList.add('py-2');
+                    nav.classList.remove('py-4');
+                } else {
+                    nav.classList.add('py-4');
+                    nav.classList.remove('py-2');
+                }
             });
 
-            mobileMenuLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    mobileMenuButton.classList.remove('is-active');
-                    mobileMenu.classList.remove('is-open');
-                });
-            });
-
-
-            // --- Smooth Scrolling ---
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const targetElement = document.querySelector(targetId);
-                    if(targetElement) {
-                        targetElement.scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-
-            // --- Typewriter Effect ---
-            const roles = ["ServiceNow Developer.", "ITSM & ITOM Specialist.", "Discovery & CMDB Administrator.", "Integration Expert.","Event & Alert Management Expert."];
-            let roleIndex = 0;
-            let roleCharIndex = 0;
-            const speed = 100;
-            const typewriterElement = document.getElementById("typewriter");
-
-            function typeWriter() {
-                const text = roles[roleIndex];
-                if (roleCharIndex < text.length) {
-                    typewriterElement.textContent += text.charAt(roleCharIndex);
-                    roleCharIndex++;
-                    setTimeout(typeWriter, speed);
-                } else {
-                    setTimeout(eraseText, 2000);
-                }
-            }
-
-            function eraseText() {
-                const text = roles[roleIndex];
-                if (roleCharIndex > 0) {
-                    typewriterElement.textContent = text.substring(0, roleCharIndex - 1);
-                    roleCharIndex--;
-                    setTimeout(eraseText, speed / 2);
-                } else {
-                    roleIndex = (roleIndex + 1) % roles.length;
-                    setTimeout(typeWriter, speed);
-                }
-            }
-            
-            // --- Testimonial Typewriter ---
-            const testimonials = [
-                { quote: "Subhasankar consistently delivers robust ServiceNow solutions and has a great eye for business logic.", author: "— Project Lead, NTT DATA" },
-                { quote: "He was a key player in our ITSM enhancement projects. His ability to troubleshoot complex issues was invaluable.", author: "— Senior Developer, Wipro Technologies" },
-                { quote: "His scripting skills are top-notch. He can take a complex requirement and turn it into a clean, efficient solution.", author: "— Technical Manager" }
-            ];
-            let testimonialIndex = 0;
-            let testimonialCharIndex = 0;
-            const testimonialTextElement = document.getElementById('testimonial-text');
-            const testimonialAuthorElement = document.getElementById('testimonial-author');
-
-            function typeTestimonial() {
-                const current = testimonials[testimonialIndex];
-                testimonialAuthorElement.textContent = ''; // Clear author initially
-                if (testimonialCharIndex < current.quote.length) {
-                    testimonialTextElement.textContent += current.quote.charAt(testimonialCharIndex);
-                    testimonialCharIndex++;
-                    setTimeout(typeTestimonial, 40);
-                } else {
-                    testimonialAuthorElement.textContent = current.author;
-                    setTimeout(eraseTestimonial, 4000); // Wait longer before erasing
-                }
-            }
-
-            function eraseTestimonial() {
-                const current = testimonials[testimonialIndex];
-                if (testimonialCharIndex > 0) {
-                    testimonialTextElement.textContent = current.quote.substring(0, testimonialCharIndex - 1);
-                    testimonialCharIndex--;
-                    setTimeout(eraseTestimonial, 20);
-                } else {
-                    testimonialIndex = (testimonialIndex + 1) % testimonials.length;
-                    setTimeout(typeTestimonial, speed);
-                }
-            }
-
-
-            // --- Particle Canvas Animation ---
-            const canvas = document.getElementById('particle-canvas');
+            // --- Interactive Particle & Mouse Effect (Antigravity Style) ---
+            const canvas = document.getElementById('canvas-bg');
             const ctx = canvas.getContext('2d');
-            let particlesArray;
 
-            // Set canvas size
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            let particles = [];
+            const particleCount = 80;
+            let mouse = { x: null, y: null };
 
-            // Particle class
+            // Cursor Custom Logic
+            const cursorDot = document.getElementById('cursor-dot');
+            const cursorOutline = document.getElementById('cursor-outline');
+
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.x;
+                mouse.y = e.y;
+
+                // Move custom cursor
+                cursorDot.style.left = e.x + 'px';
+                cursorDot.style.top = e.y + 'px';
+
+                // Delay effect for outline
+                cursorOutline.animate({
+                    left: e.x + 'px',
+                    top: e.y + 'px'
+                }, { duration: 500, fill: "forwards" });
+            });
+
+            // Handle hover state for custom cursor
+            const targets = document.querySelectorAll('a, button, .cursor-none-target');
+            targets.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursorOutline.style.transform = "translate(-50%, -50%) scale(1.5)";
+                    cursorOutline.style.backgroundColor = "rgba(134, 237, 120, 0.1)";
+                    cursorOutline.style.borderColor = "transparent";
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursorOutline.style.transform = "translate(-50%, -50%) scale(1)";
+                    cursorOutline.style.backgroundColor = "transparent";
+                    cursorOutline.style.borderColor = "#86ED78";
+                });
+            });
+
+            // Resize Canvas
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            // Particle Class
             class Particle {
-                constructor(x, y, directionX, directionY, size, color) {
-                    this.x = x;
-                    this.y = y;
-                    this.directionX = directionX;
-                    this.directionY = directionY;
-                    this.size = size;
-                    this.color = color;
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.vx = (Math.random() - 0.5) * 0.5; // Slow movement
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                    this.size = Math.random() * 2 + 1;
+                    this.baseColor = '#1f4e5a'; // Muted Teal
                 }
+
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    // Bounce off edges
+                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                    // Mouse Interaction (Antigravity Pull)
+                    if (mouse.x != null) {
+                        let dx = mouse.x - this.x;
+                        let dy = mouse.y - this.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < 200) {
+                            const forceDirectionX = dx / distance;
+                            const forceDirectionY = dy / distance;
+                            const force = (200 - distance) / 200;
+                            const directionX = forceDirectionX * force * 0.5; // Gentle pull
+                            const directionY = forceDirectionY * force * 0.5;
+                            this.vx += directionX;
+                            this.vy += directionY;
+                        }
+                    }
+                }
+
                 draw() {
+                    ctx.fillStyle = this.baseColor;
                     ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-                    ctx.fillStyle = this.color;
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                     ctx.fill();
                 }
-                update() {
-                    if (this.x > canvas.width || this.x < 0) {
-                        this.directionX = -this.directionX;
-                    }
-                    if (this.y > canvas.height || this.y < 0) {
-                        this.directionY = -this.directionY;
-                    }
-                    this.x += this.directionX;
-                    this.y += this.directionY;
-                    this.draw();
-                }
             }
 
-            // Create particle array
-            function init() {
-                particlesArray = [];
-                let numberOfParticles = (canvas.height * canvas.width) / 9000;
-                for (let i = 0; i < numberOfParticles; i++) {
-                    let size = (Math.random() * 2) + 1;
-                    let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
-                    let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-                    let directionX = (Math.random() * .4) - .2;
-                    let directionY = (Math.random() * .4) - .2;
-                    let color = 'rgba(100, 255, 218, 0.5)'; // primary-accent with alpha
-
-                    particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
-                }
+            // Init Particles
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
             }
 
-            // Animation loop
-            function animate() {
-                requestAnimationFrame(animate);
-                ctx.clearRect(0, 0, innerWidth, innerHeight);
+            // Animation Loop
+            function animateCanvas() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                for (let i = 0; i < particlesArray.length; i++) {
-                    particlesArray[i].update();
-                }
-                connect();
-            }
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
 
-            // Connect particles with lines
-            function connect() {
-                let opacityValue = 1;
-                for (let a = 0; a < particlesArray.length; a++) {
-                    for (let b = a; b < particlesArray.length; b++) {
-                        let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) +
-                                       ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
-                        if (distance < (canvas.width / 7) * (canvas.height / 7)) {
-                            opacityValue = 1 - (distance / 20000);
-                            ctx.strokeStyle = `rgba(142, 146, 176, ${opacityValue})`; // slate with dynamic alpha
+                    // Connect particles to mouse
+                    if (mouse.x != null) {
+                        let dx = mouse.x - particles[i].x;
+                        let dy = mouse.y - particles[i].y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < 150) {
+                            ctx.strokeStyle = `rgba(134, 237, 120, ${1 - distance / 150})`; // Sn-Green Fade
                             ctx.lineWidth = 1;
                             ctx.beginPath();
-                            ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                            ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(mouse.x, mouse.y);
+                            ctx.stroke();
+                        }
+                    }
+
+                    // Connect particles to each other (Network mesh)
+                    for (let j = i; j < particles.length; j++) {
+                        let dx = particles[i].x - particles[j].x;
+                        let dy = particles[i].y - particles[j].y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < 100) {
+                            ctx.strokeStyle = `rgba(31, 78, 90, ${1 - distance / 100})`; // Muted connection
+                            ctx.lineWidth = 0.5;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
                             ctx.stroke();
                         }
                     }
                 }
+                requestAnimationFrame(animateCanvas);
             }
-            
-            // Resize event
-            window.addEventListener('resize', () => {
-                canvas.width = innerWidth;
-                canvas.height = innerHeight;
-                init();
-            });
+            animateCanvas();
 
-            // --- Scroll to Top Button Logic ---
-            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 300) {
-                    scrollToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
-                } else {
-                    scrollToTopBtn.classList.add('opacity-0', 'pointer-events-none');
-                }
-            });
-
-            // Start animations
-            init();
-            animate();
-            typeWriter();
-            typeTestimonial();
         });
     </script>
 </body>
+
 </html>
